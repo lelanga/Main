@@ -14,6 +14,7 @@ import json
 import logging
 import os
 import platform
+import shutil
 import subprocess
 import sys
 import threading
@@ -84,7 +85,8 @@ class Config:
         return cls(
             token=token,
             chat_id=chat_id,
-            claude_bin=os.environ.get("CLAUDE_BIN", "claude"),
+            # which() applies PATHEXT on Windows, so "claude" finds claude.exe / claude.cmd
+            claude_bin=shutil.which(os.environ.get("CLAUDE_BIN", "claude")) or os.environ.get("CLAUDE_BIN", "claude"),
             workdir=workdir,
             permission_mode=mode,
             allowed_tools=os.environ.get("CLAUDE_ALLOWED_TOOLS", "").strip(),
